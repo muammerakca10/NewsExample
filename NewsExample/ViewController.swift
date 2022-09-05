@@ -14,7 +14,7 @@ class ViewController:  UITableViewController {
     var tempPetitions = [Petition]()
     var filterWord : String?
     var textFieldSearch : UITextField? = nil
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,12 +46,12 @@ class ViewController:  UITableViewController {
         let acFilter = UIAlertController(title: "Search Menu", message: "Enter Search Word...", preferredStyle: UIAlertController.Style.alert)
         acFilter.addTextField()
         acFilter.addAction(UIAlertAction(title: "Search", style: .default, handler: { alertAction in
-                self.filterWord = acFilter.textFields![0].text
-                print(self.filterWord)
+            self.filterWord = acFilter.textFields![0].text
             
             if let filterWord = self.filterWord {
                 for petition in self.petitions {
                     if petition.body.contains(filterWord) {
+                        self.filteredPetitions.removeAll()
                         self.filteredPetitions.append(petition)
                     }
                 }
@@ -61,13 +61,12 @@ class ViewController:  UITableViewController {
             }
         }))
         
-        
-        
-        
         acFilter.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
         acFilter.addAction(UIAlertAction(title: "Show all", style: .default, handler: { (alert) in
             self.tempPetitions = self.petitions
             self.tableView.reloadData()
+            self.filterWord = ""
         }))
         
         
@@ -76,13 +75,13 @@ class ViewController:  UITableViewController {
         
         
         /*
-        if let searchWord = acFilter.textFields?[0].text{
-            filterWord = searchWord
-            print(filterWord)
-            present(acFilter, animated: true)
-        }
+         if let searchWord = acFilter.textFields?[0].text{
+         filterWord = searchWord
+         print(filterWord)
+         present(acFilter, animated: true)
+         }
          */
-         
+        
         
     }
     
@@ -107,7 +106,7 @@ class ViewController:  UITableViewController {
             
         }
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tempPetitions.count
     }
