@@ -55,9 +55,17 @@ class ViewController:  UITableViewController {
                         self.filteredPetitions.append(petition)
                     }
                 }
+                
                 self.tempPetitions = self.filteredPetitions
                 self.tableView.reloadData()
-                //print(self.filteredPetitions)
+                
+                if self.tempPetitions.isEmpty {
+                    let acNotFound = UIAlertController(title: "Error!", message: "\(filterWord) is not found", preferredStyle: .alert)
+                    acNotFound.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                    self.present(acNotFound, animated: true)
+                    self.tempPetitions = self.petitions
+                    self.tableView.reloadData()
+                }
             }
         }))
         
