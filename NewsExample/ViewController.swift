@@ -49,9 +49,9 @@ class ViewController:  UITableViewController {
             self.filterWord = acFilter.textFields![0].text
             
             if let filterWord = self.filterWord {
+                self.filteredPetitions.removeAll()
                 for petition in self.petitions {
-                    if petition.body.contains(filterWord) {
-                        self.filteredPetitions.removeAll()
+                    if petition.body.lowercased().contains(filterWord.lowercased()) || petition.title.lowercased().contains(filterWord.lowercased()) {
                         self.filteredPetitions.append(petition)
                     }
                 }
