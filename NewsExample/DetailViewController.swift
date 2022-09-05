@@ -39,7 +39,6 @@ class DetailViewController: UIViewController {
         """
         
         webView.loadHTMLString(html, baseURL: nil)
-
         // Do any additional setup after loading the view.
     }
     
