@@ -32,16 +32,20 @@ class ViewController:  UITableViewController {
         } else {
             urlString = "https://www.hackingwithswift.com/samples/petitions-2.json"
         }
-        
-        if let url = URL(string: urlString){
-            if let data = try? Data(contentsOf: url){
-                parse(json: data)
-            } else {
-                showError()
+        DispatchQueue.global(qos: .userInitiated).async {
+            if let url = URL(string: urlString){
+                if let data = try? Data(contentsOf: url){
+                    self.parse(json: data)
+                } else {
+                    self.showError()
+                }
             }
+            self.tempPetitions = self.petitions
         }
-        tempPetitions = petitions
+        
     }
+    
+    
     @objc func searchButtonTapped(){
         let acFilter = UIAlertController(title: "Search Menu", message: "Enter Search Word...", preferredStyle: UIAlertController.Style.alert)
         acFilter.addTextField()
@@ -76,33 +80,23 @@ class ViewController:  UITableViewController {
             self.tableView.reloadData()
             self.filterWord = ""
         }))
-        
-        
-        
         present(acFilter, animated: true)
-        
-        
-        /*
-         if let searchWord = acFilter.textFields?[0].text{
-         filterWord = searchWord
-         print(filterWord)
-         present(acFilter, animated: true)
-         }
-         */
-        
-        
     }
-    
+    /*
     @objc func creditsButtonTapped(){
         let ac = UIAlertController(title: "Credits", message: "This informations from White House", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(ac, animated: true)
     }
+     */
     
     func showError () {
-        let ac = UIAlertController(title: "Error", message: "An error occurred. Please control your connect!", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(ac, animated: true)
+        DispatchQueue.main.async { [weak self] in
+            let ac = UIAlertController(title: "Error", message: "An error occurred. Please control your connect!", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self?.present(ac, animated: true)
+        }
+        
     }
     
     func parse(json: Data){
@@ -110,7 +104,10 @@ class ViewController:  UITableViewController {
         
         if let jsonPetitions = try? decoder.decode(Petitions.self, from: json) {
             petitions = jsonPetitions.results
-            tableView.reloadData()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            
             
         }
     }
